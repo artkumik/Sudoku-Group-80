@@ -20,7 +20,7 @@ class Cell:
         x = self.col
         y = self.row
 
-        # pygame.draw.rect(self.screen, White, (x,y,self),1)
+        pygame.draw.rect(self.screen, White, (x, y, self),1)
 
         if self.value != 0:
             font = pygame.font.Font(None, 36)
