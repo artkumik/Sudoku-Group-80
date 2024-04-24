@@ -7,6 +7,8 @@ Black = (0,0,0)
 White = (255,255,255)
 total_width = 900
 total_height = 1000
+
+
 def draw_game_start(screen):
     #FINISHED
     # font sizes
@@ -137,6 +139,7 @@ def draw_game_win():
 def game_start(difficulty):
     # creates new board, titles, and buttons
     new_board = Board(900, 900, screen, difficulty)
+    new_board.initialize_cells(altered_generated_Board) # <-- Called initialized method.
     new_board.draw()
 
     # font size
@@ -151,9 +154,11 @@ def game_start(difficulty):
     reset_surface = pygame.Surface((reset_text.get_size()[0] + 20, reset_text.get_size()[1] + 20))
     reset_surface.fill(FontColor)
     reset_surface.blit(reset_text, (10, 10))
+
     restart_surface = pygame.Surface((restart_text.get_size()[0] + 20, restart_text.get_size()[1] + 20))
     restart_surface.fill(FontColor)
     restart_surface.blit(restart_text, (10, 10))
+
     exits_surface = pygame.Surface((exits_text.get_size()[0] + 20, exits_text.get_size()[1] + 20))
     exits_surface.fill(FontColor)
     exits_surface.blit(exits_text, (10, 10))
@@ -192,8 +197,23 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((900, 1000))
     pygame.display.set_caption("Sudoku")
+
     # starts menu and gets difficulty
     str_difficulty = draw_game_start(screen)
+
+    # Difficulty check to set # of removed cells
+    if str_difficulty == "easy":
+        removed_cells = 30
+    elif str_difficulty == "medium":
+        removed_cells = 40
+    elif str_difficulty == "hard":
+        removed_cells = 50
+
+    #Board Intialization
+    Sudoku = SudokuGenerator(9,removed_cells)  # Board Initialize
+    generated_board = Sudoku.fill_values()  # Fills Board
+    Sudoku.remove_cells()  # Removes Cells
+    altered_generated_Board = Sudoku.get_generated_board()  # Calls Altered Board
 
     while True:
         # starts a game and waits for the return of game condition

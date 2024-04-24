@@ -1,14 +1,8 @@
-import pygame,cell
-from sudoku_generator import SudokuGenerator
+import pygame
+import cell
 
 Black = (0, 0, 0)
 White = (255, 255, 255)
-
-Sudoku = SudokuGenerator(9,30) # Board Initialize
-generated_board = Sudoku.fill_values() # Fills Board
-Sudoku.remove_cells() # Removes Cells
-generated_Board = Sudoku.get_generated_board() # Calls Altered Board
-
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
@@ -16,21 +10,23 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
-
-        # Creating cell objects within the board and attributing/passing their respective values
-        # Perhaps instead use set cell value function within cell class?
-        self.cells = []    #[[cell.Cell(generated_board, row, col, screen) for col in range(9)] for row in range(9)]
-        for row in range(9):
-            row_cells = []
-            for col in range(9):
-                value = generated_board[row][col]  # Check this bullshit out.
-                cell_obj = cell.Cell(value, row, col, screen)
-                row_cells.append(cell_obj)
-            self.cells.append(row_cells)
+        self.cells = []
 
     # Constructor for the Board class.
     # screen is a window from PyGame.
     # difficulty is a variable to indicate if the user chose easy, medium, or hard. Sets # of removed cells.
+
+    # Creating cell objects within the board and attributing/passing their respective values
+    # Perhaps instead use set cell value function within cell class?
+    def initialize_cells(self, generated_board):
+        for row in range(9):
+            row_cells = []
+            for col in range(9):
+                value = generated_board[row][col]  # Check this bullshit out.
+                cell_obj = cell.Cell(value, row, col, self.screen)
+                row_cells.append(cell_obj)
+            self.cells.append(row_cells)
+
     def draw(self):
 
         # Calling cell draw function

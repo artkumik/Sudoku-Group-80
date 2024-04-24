@@ -2,7 +2,7 @@ import random
 import math
 
 class SudokuGenerator:
-    def __init__(self,row_length,removed_cells):
+    def __init__(self, row_length=9, removed_cells=30):
         self.row_length = row_length
         self.removed_cells = removed_cells
         self.board = self.get_board()
