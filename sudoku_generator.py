@@ -85,8 +85,13 @@ class SudokuGenerator:
         self.fill_remaining(0, self.box_length)
 
     def remove_cells(self):
+        #removed cells is the amount of cells to removed? can be changed by setup
         size = self.row_length * self.row_length
-        random.sample(range(size), self.removed_cells)
+        remove = random.sample(range(size), self.removed_cells)
+        for i in remove:
+            remove_row = i // 9
+            remove_col = i % 9
+            self.board[remove_row][remove_col] = 0
 
                     
 
@@ -95,4 +100,8 @@ b1 = SudokuGenerator(9,30)
 
 print()
 b1.fill_values()
+b1.print_board()
+
+print()
+b1.remove_cells()
 b1.print_board()
