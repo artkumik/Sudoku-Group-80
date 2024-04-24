@@ -18,15 +18,14 @@ class Cell:
         self.sketch = value
 
 
-    # Not Finished
-    def draw(self): # Feel as though I'm missing some details but the main idea is there.
-        cell_size = 99  # When set to 100, the board is not filled, 99 'works' but is scuffed.
-        # I feel as though it has to do with the range called within the Board class.
+    # Finished?
+    def draw(self):
+        cell_size = 100
         x = self.col * cell_size
         y = self.row * cell_size
         # print(x, y) # DEBUG
 
-        pygame.draw.rect(self.screen, Red, (x, y, cell_size, cell_size), 1)
+        pygame.draw.rect(self.screen, White, (x, y, cell_size, cell_size), 1)
 
         if self.value != 0:
             # print(self.value) # DEBUG
