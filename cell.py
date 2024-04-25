@@ -24,11 +24,10 @@ class Cell:
         x = self.col * cell_size
         y = self.row * cell_size
         # print(x, y) # DEBUG
-
+        # print(self.value) # DEBUG
         pygame.draw.rect(self.screen, White, (x, y, cell_size, cell_size), 1)
 
         if self.value != 0:
-            # print(self.value) # DEBUG
             font = pygame.font.Font(None, 36)
             text = font.render(str(self.value), True, Black)
             text_rect = text.get_rect(center=(x + cell_size // 2, y + cell_size // 2))

@@ -99,8 +99,10 @@ class Board:
     # Sets the value of the current selected cell equal to user entered value.
     # Called when the user presses the Enter key.
 
-    def reset_to_original(self):
-        pass
+
+    # Already have a get board method from generator
+    # def reset_to_original(self):
+    #     pass
 
     # Reset all cells in the board to their original values (0 if cleared, otherwise the corresponding digit).
 

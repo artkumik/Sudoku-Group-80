@@ -1,3 +1,4 @@
+import copy
 import pygame, sys
 from board import *
 from sudoku_generator import SudokuGenerator
@@ -209,12 +210,16 @@ if __name__ == "__main__":
         removed_cells = 40
     elif str_difficulty == "hard":
         removed_cells = 50
+    # Difficulty check to set # of removed cells
 
-    #Board Intialization
-    Sudoku = SudokuGenerator(9,removed_cells)  # Board Initialize
-    generated_board = Sudoku.fill_values()  # Fills Board
+    # # BOARD INITIALIZATION # #
+    Sudoku = SudokuGenerator(9, removed_cells)  # Board Initialize
+    Sudoku.fill_values()  # Fills Board
+    Sudoku2 = copy.deepcopy(Sudoku) # Copy of initial board for validation purposes
+    generated_board = Sudoku2.get_generated_board() # Copied board
     Sudoku.remove_cells()  # Removes Cells
-    altered_generated_Board = Sudoku.get_generated_board()  # Calls Altered Board
+    altered_generated_Board = Sudoku.get_generated_board()  # Altered Board
+    # # BOARD INITIALIZATION # #
 
     while True:
         # starts a game and waits for the return of game condition
@@ -230,7 +235,7 @@ if __name__ == "__main__":
             # RESETS THE BOARD TO BEFORE USER'S ADDED GUESSES
             pass
         elif game_condition == "restart":
-            # cv paste of board initialization :P it works ok?
+            # cv paste of board initialization :P it works ok? <3
             str_difficulty = draw_game_start(screen)
             if str_difficulty == "easy":
                 removed_cells = 30
@@ -238,7 +243,13 @@ if __name__ == "__main__":
                 removed_cells = 40
             elif str_difficulty == "hard":
                 removed_cells = 50
+            # Difficulty check to set # of removed cells
+
+            # # BOARD INITIALIZATION # #
             Sudoku = SudokuGenerator(9, removed_cells)  # Board Initialize
-            generated_board = Sudoku.fill_values()  # Fills Board
+            Sudoku.fill_values()  # Fills Board
+            Sudoku2 = copy.deepcopy(Sudoku)  # Copy of initial board for validation purposes
+            generated_board = Sudoku2.get_generated_board()  # Copied board
             Sudoku.remove_cells()  # Removes Cells
-            altered_generated_Board = Sudoku.get_generated_board()  # Calls Altered Board
+            altered_generated_Board = Sudoku.get_generated_board()  # Altered Board
+            # # BOARD INITIALIZATION # #
