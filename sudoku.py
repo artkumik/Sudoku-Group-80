@@ -138,6 +138,7 @@ def draw_game_win():
     pass
 def game_start(difficulty):
     # creates new board, titles, and buttons
+    screen.fill(White)
     new_board = Board(900, 900, screen, difficulty)
     new_board.initialize_cells(altered_generated_Board) # <-- Called initialized method.
     new_board.draw()
@@ -220,13 +221,24 @@ if __name__ == "__main__":
         screen.fill(White)
         game_condition = game_start(str_difficulty)
 
-        # NOT ACCURATE GOOD TESTS TO SEE WIN AND LOSE SCREENS
-        # SHOULD BE FIXED WHEN MORE CODE IS ADDED FOR GAMEPLAY PROBABLY
+        # RESET BUTTON NEEDS CODE FOR RESETTING USER'S INPUTTED NUMBERS
         if game_condition == "lost":
             draw_game_over()
         elif game_condition == "win":
             draw_game_win()
         elif game_condition == "reset":
-            draw_game_win()
+            # RESETS THE BOARD TO BEFORE USER'S ADDED GUESSES
+            pass
         elif game_condition == "restart":
-            draw_game_over()
+            # cv paste of board initialization :P it works ok?
+            str_difficulty = draw_game_start(screen)
+            if str_difficulty == "easy":
+                removed_cells = 30
+            elif str_difficulty == "medium":
+                removed_cells = 40
+            elif str_difficulty == "hard":
+                removed_cells = 50
+            Sudoku = SudokuGenerator(9, removed_cells)  # Board Initialize
+            generated_board = Sudoku.fill_values()  # Fills Board
+            Sudoku.remove_cells()  # Removes Cells
+            altered_generated_Board = Sudoku.get_generated_board()  # Calls Altered Board
