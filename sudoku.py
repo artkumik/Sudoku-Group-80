@@ -143,7 +143,6 @@ def game_start(difficulty):
     board = Board(900, 900, screen, difficulty, master_board) # <-- Board creation
     board.initialize_cells(altered_generated_Board) # <-- Called initialized method.
     board.draw() # <-- Board Draw
-    #new_board.print_board()
 
     # font size
     button_font = pygame.font.Font(None, 60)
@@ -205,7 +204,7 @@ def game_start(difficulty):
                     board.is_full()
                     if board.is_full() and board.is_board_equal_to_master():
                         draw_game_win()
-                    else:
+                    elif board.is_full():
                         draw_game_over()
                 if event.key == pygame.K_BACKSPACE:
                     board.clear()
