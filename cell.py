@@ -12,7 +12,6 @@ class Cell:
         self.sketch = 0
         self.user_value = 0
         self.selected = False
-
     
     def set_cell_value(self,value):
         self.value = value

@@ -98,7 +98,7 @@ def draw_game_over():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if res_rectangle.collidepoint(event.pos):
-                    return
+                    return 'restart'
         pygame.display.update()
     pass
 def draw_game_win():
@@ -201,11 +201,12 @@ def game_start(difficulty):
                 if event.key == pygame.K_RETURN:
                     board.place_number()
                     board.update_board()
-                    board.is_full()
-                    if board.is_full() and board.is_board_equal_to_master():
+                    board_full = board.is_full()
+                    if board_full and board.is_board_equal_to_master():
                         draw_game_win()
-                    elif board.is_full():
+                    elif board_full:
                         draw_game_over()
+                        return 'restart'
                 if event.key == pygame.K_BACKSPACE:
                     board.clear()
                     board.update_board()
@@ -236,12 +237,12 @@ if __name__ == "__main__":
     master_board = copy.deepcopy(Sudoku) # Copy of initial board for validation purposes
     master_board.print_board()
     master_board = master_board.get_generated_board()
-
     print()
     Sudoku.remove_cells()  # Removes Cells
     altered_generated_Board = Sudoku.get_generated_board()  # Altered Board
     altered_board = copy.deepcopy(Sudoku) # Copy of altered board for reset after value change.
     altered_board.print_board()
+    print()
     # # BOARD INITIALIZATION # #
 
     while True:
@@ -262,7 +263,7 @@ if __name__ == "__main__":
             # cv paste of board initialization :P it works ok? <3
             str_difficulty = draw_game_start(screen)
             if str_difficulty == "easy":
-                removed_cells = 30
+                removed_cells = 30 # <-- Change to 1 to debug
             elif str_difficulty == "medium":
                 removed_cells = 40
             elif str_difficulty == "hard":
@@ -272,8 +273,13 @@ if __name__ == "__main__":
             # # BOARD INITIALIZATION # #
             Sudoku = SudokuGenerator(9, removed_cells)  # Board Initialize
             Sudoku.fill_values()  # Fills Board
-            Sudoku2 = copy.deepcopy(Sudoku)  # Copy of initial board for validation purposes
-            generated_board = Sudoku2.get_generated_board()  # Copied board
+            master_board = copy.deepcopy(Sudoku)  # Copy of initial board for validation purposes
+            master_board.print_board()
+            master_board = master_board.get_generated_board()
+            print()
             Sudoku.remove_cells()  # Removes Cells
             altered_generated_Board = Sudoku.get_generated_board()  # Altered Board
+            altered_board = copy.deepcopy(Sudoku)  # Copy of altered board for reset after value change.
+            altered_board.print_board()
+            print()
             # # BOARD INITIALIZATION # #
