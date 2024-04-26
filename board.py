@@ -74,6 +74,8 @@ class Board:
         mouse_pos = pygame.mouse.get_pos()
         col = mouse_pos[0] // 100
         row = mouse_pos[1] // 100
+        if row >= len(self.cells) or col >= len(self.cells[0]):
+            return None
         return col, row
     # Returns position of cell
 
@@ -85,6 +87,8 @@ class Board:
                 self.draw()
                 if self.selected_cell:
                     self.selected_cell.deselect()
+                    self.selected_cell.draw()
+                    self.draw()
                 current_cell.c_select()
                 self.selected_cell = current_cell
 

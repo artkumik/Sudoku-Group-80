@@ -191,8 +191,10 @@ def game_start(difficulty):
                     return "restart"
                     pass
                 elif board.board_area.collidepoint(event.pos):
-                    row, col = board.get_pos()
-                    board.b_select(row, col)
+                    pos = board.get_pos()
+                    if pos is not None:
+                        row, col = pos
+                        board.b_select(row, col)
             if event.type == pygame.KEYDOWN:
                 if 'unicode' in dir(event) and event.unicode.isdigit():
                     num = int(event.unicode)
