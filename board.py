@@ -11,6 +11,11 @@ class Board:
         self.screen = screen
         self.difficulty = difficulty
         self.cells = []
+        self.selected_cell = None
+        self.board_x = 0
+        self.board_y = 0
+        self.cell_size = 100
+        self.board_area = pygame.Rect(self.board_x, self.board_y, self.width * self.cell_size, self.height * self.cell_size)
 
     # Constructor for the Board class.
     # screen is a window from PyGame.
@@ -38,7 +43,7 @@ class Board:
         x = 1
         for i in range(1, 10):
             if x % 3 == 0:
-                line_width = 8
+                line_width = 7
             else:
                 line_width = 3
             pygame.draw.line(
@@ -52,9 +57,9 @@ class Board:
 
         # Grid y-axis
         y = 1
-        for i in range(1, 9):
+        for i in range(1, 10):
             if y % 3 == 0:
-                line_width = 8
+                line_width = 7
             else:
                 line_width = 3
             pygame.draw.line(
@@ -68,15 +73,38 @@ class Board:
 
     # Draws an outline of the Sudoku grid, with bold lines to delineate the 3x3 boxes.
     # Draws every cell on this board.
+    def get_pos(self):
+        mouse_pos = pygame.mouse.get_pos()
+        col = mouse_pos[0] // 100
+        row = mouse_pos[1] // 100
+        return col, row
 
-    def select(self, row, col):
-        pass
+
+    def b_select(self, col, row):
+        current_cell = self.cells[row][col]
+        if current_cell.value == 0:
+            if self.selected_cell == current_cell:
+                current_cell.deselect()
+                self.selected_cell = None
+
+            else:
+                if self.selected_cell:
+                    self.selected_cell.deselect()
+                current_cell.c_select()
+                self.selected_cell = current_cell
+
+            if self.selected_cell is not None:
+                self.selected_cell.draw()
+            else:
+                self.draw()
 
     # Marks the cell at (row, col) in the board as the current selected cell.
     # Once a cell has been selected, the user can edit its value or sketched value.
 
     def click(self, x, y):
-        pass
+        row = y * 100
+        col = x * 100
+        return row, col
 
     # If a tuple of (x, y) coordinates is within the displayed board, this function returns a tuple of the (row, col)
     # of the cell which was clicked. Otherwise, this function returns None.
@@ -88,7 +116,19 @@ class Board:
     # filled by themselves.
 
     def sketch(self, value):
-        pass
+
+        if self.selected_cell is not None and self.selected_cell.value == 0:
+            if self.selected_cell.sketch != 0 and value != self.selected_cell.sketch:
+                self.selected_cell.sketch = 0
+                self.selected_cell.draw()
+
+            if self.selected_cell and 1 <= value <= 9:
+                self.selected_cell.sketch = value
+                print(f"Sketched {value} on cell at ({self.selected_cell.row}, {self.selected_cell.col}).") # DEBUG
+                self.selected_cell.draw()
+                self.selected_cell.deselect()
+                self.selected_cell = None
+                self.draw()
 
     # Sets the sketched value of the current selected cell equal to user entered value.
     # It will be displayed in the top left corner of the cell using the draw() function.
@@ -124,3 +164,8 @@ class Board:
     def check_board(self):
         pass
     # Check whether the Sudoku board is solved correctly
+
+    def print_board(self):
+        for row in self.cells:
+            row_values = [cell.value for cell in row]
+            print(row_values)

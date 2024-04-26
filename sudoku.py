@@ -140,9 +140,10 @@ def draw_game_win():
 def game_start(difficulty):
     # creates new board, titles, and buttons
     screen.fill(White)
-    new_board = Board(900, 900, screen, difficulty)
-    new_board.initialize_cells(altered_generated_Board) # <-- Called initialized method.
-    new_board.draw()
+    board = Board(900, 900, screen, difficulty) # <-- Board creation
+    board.initialize_cells(altered_generated_Board) # <-- Called initialized method.
+    board.draw() # <-- Board Draw
+    #new_board.print_board()
 
     # font size
     button_font = pygame.font.Font(None, 60)
@@ -156,11 +157,9 @@ def game_start(difficulty):
     reset_surface = pygame.Surface((reset_text.get_size()[0] + 20, reset_text.get_size()[1] + 20))
     reset_surface.fill(FontColor)
     reset_surface.blit(reset_text, (10, 10))
-
     restart_surface = pygame.Surface((restart_text.get_size()[0] + 20, restart_text.get_size()[1] + 20))
     restart_surface.fill(FontColor)
     restart_surface.blit(restart_text, (10, 10))
-
     exits_surface = pygame.Surface((exits_text.get_size()[0] + 20, exits_text.get_size()[1] + 20))
     exits_surface.fill(FontColor)
     exits_surface.blit(exits_text, (10, 10))
@@ -192,6 +191,15 @@ def game_start(difficulty):
                 elif restart_rectangle.collidepoint(event.pos):
                     return "restart"
                     pass
+                elif board.board_area.collidepoint(event.pos):
+                    row, col = board.get_pos()
+                    board.b_select(row, col)
+            if event.type == pygame.KEYDOWN:
+                if 'unicode' in dir(event) and event.unicode.isdigit():
+                    num = int(event.unicode)
+                    if 1 <= num <= 9:
+                        board.sketch(num)
+
         pygame.display.update()
 
 
@@ -225,6 +233,7 @@ if __name__ == "__main__":
         # starts a game and waits for the return of game condition
         screen.fill(White)
         game_condition = game_start(str_difficulty)
+
 
         # RESET BUTTON NEEDS CODE FOR RESETTING USER'S INPUTTED NUMBERS
         if game_condition == "lost":
