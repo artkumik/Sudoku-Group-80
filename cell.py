@@ -10,7 +10,9 @@ class Cell:
         self.col = col
         self.screen = screen
         self.sketch = 0
+        self.user_value = 0
         self.selected = False
+
     
     def set_cell_value(self,value):
         self.value = value
@@ -35,7 +37,7 @@ class Cell:
         # print(x, y) # DEBUG
         # print(self.value) # DEBUG
         pygame.draw.rect(self.screen, White, (x, y, cell_size, cell_size))
-        pygame.draw.rect(self.screen, Red if self.selected else Black, (x, y, cell_size, cell_size), 1)
+        pygame.draw.rect(self.screen, Red if self.selected else Black, (x, y, cell_size, cell_size), 2)
 
         if self.value != 0:
             font = pygame.font.Font(None, 36)
@@ -44,9 +46,15 @@ class Cell:
             self.screen.blit(text, text_rect)
 
         if self.sketch != 0:
-            font = pygame.font.Font(None, 40)
+            font = pygame.font.Font(None, 36)
             text = font.render(str(self.sketch), True, (200,200,200))
-            text_rect = text.get_rect(center=(x + 11, y + 15))
+            text_rect = text.get_rect(center=(x + 11, y + 18))
+            self.screen.blit(text, text_rect)
+
+        if self.user_value != 0:
+            font = pygame.font.Font(None, 36)
+            text = font.render(str(self.user_value), True, (200,200,200))
+            text_rect = text.get_rect(center=(x + cell_size // 2, y + cell_size // 2))
             self.screen.blit(text, text_rect)
 
 

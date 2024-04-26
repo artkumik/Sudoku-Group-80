@@ -140,7 +140,7 @@ def draw_game_win():
 def game_start(difficulty):
     # creates new board, titles, and buttons
     screen.fill(White)
-    board = Board(900, 900, screen, difficulty) # <-- Board creation
+    board = Board(900, 900, screen, difficulty, master_board) # <-- Board creation
     board.initialize_cells(altered_generated_Board) # <-- Called initialized method.
     board.draw() # <-- Board Draw
     #new_board.print_board()
@@ -199,6 +199,17 @@ def game_start(difficulty):
                     num = int(event.unicode)
                     if 1 <= num <= 9:
                         board.sketch(num)
+                if event.key == pygame.K_RETURN:
+                    board.place_number()
+                    board.update_board()
+                    board.is_full()
+                    if board.is_full() and board.is_board_equal_to_master():
+                        draw_game_win()
+                    else:
+                        draw_game_over()
+                if event.key == pygame.K_BACKSPACE:
+                    board.clear()
+                    board.update_board()
 
         pygame.display.update()
 
@@ -213,7 +224,7 @@ if __name__ == "__main__":
 
     # Difficulty check to set # of removed cells
     if str_difficulty == "easy":
-        removed_cells = 30
+        removed_cells = 30 # <-- Change to 1 to debug
     elif str_difficulty == "medium":
         removed_cells = 40
     elif str_difficulty == "hard":
@@ -223,10 +234,15 @@ if __name__ == "__main__":
     # # BOARD INITIALIZATION # #
     Sudoku = SudokuGenerator(9, removed_cells)  # Board Initialize
     Sudoku.fill_values()  # Fills Board
-    Sudoku2 = copy.deepcopy(Sudoku) # Copy of initial board for validation purposes
-    generated_board = Sudoku2.get_generated_board() # Copied board
+    master_board = copy.deepcopy(Sudoku) # Copy of initial board for validation purposes
+    master_board.print_board()
+    master_board = master_board.get_generated_board()
+
+    print()
     Sudoku.remove_cells()  # Removes Cells
     altered_generated_Board = Sudoku.get_generated_board()  # Altered Board
+    altered_board = copy.deepcopy(Sudoku) # Copy of altered board for reset after value change.
+    altered_board.print_board()
     # # BOARD INITIALIZATION # #
 
     while True:

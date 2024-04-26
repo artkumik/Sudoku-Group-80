@@ -5,7 +5,7 @@ Black = (0, 0, 0)
 White = (255, 255, 255)
 
 class Board:
-    def __init__(self, width, height, screen, difficulty):
+    def __init__(self, width, height, screen, difficulty, master_board):
         self.width = width
         self.height = height
         self.screen = screen
@@ -16,6 +16,7 @@ class Board:
         self.board_y = 0
         self.cell_size = 100
         self.board_area = pygame.Rect(self.board_x, self.board_y, self.width * self.cell_size, self.height * self.cell_size)
+        self.master_board = master_board
 
     # Constructor for the Board class.
     # screen is a window from PyGame.
@@ -73,33 +74,35 @@ class Board:
 
     # Draws an outline of the Sudoku grid, with bold lines to delineate the 3x3 boxes.
     # Draws every cell on this board.
+
+
+    # Returns position of cell
     def get_pos(self):
         mouse_pos = pygame.mouse.get_pos()
         col = mouse_pos[0] // 100
         row = mouse_pos[1] // 100
         return col, row
 
-
+    # Selects Cell
     def b_select(self, col, row):
         current_cell = self.cells[row][col]
-        if current_cell.value == 0:
-            if self.selected_cell == current_cell:
-                current_cell.deselect()
-                self.selected_cell = None
-
-            else:
+        if current_cell.value == 0 or current_cell.user_value != 0:
+            if self.selected_cell != current_cell:
+                self.draw()
                 if self.selected_cell:
-                    self.selected_cell.deselect()
-                current_cell.c_select()
-                self.selected_cell = current_cell
+                    self.selected_cell.deselect()  # Deselect the previously selected cell
+                current_cell.c_select()  # Select the new cell
+                self.selected_cell = current_cell  # Update the reference to the new selected cell
+                # No need to deselect if the same cell is clicked; it stays selected
 
             if self.selected_cell is not None:
-                self.selected_cell.draw()
+                self.selected_cell.draw()  # Redraw only the selected cell
             else:
-                self.draw()
+                self.draw()  # Redraw the entire board if needed
 
     # Marks the cell at (row, col) in the board as the current selected cell.
     # Once a cell has been selected, the user can edit its value or sketched value.
+
 
     def click(self, x, y):
         row = y * 100
@@ -110,7 +113,11 @@ class Board:
     # of the cell which was clicked. Otherwise, this function returns None.
 
     def clear(self):
-        pass
+        if self.selected_cell is not None and (self.selected_cell.user_value != 0 or self.selected_cell.sketch != 0):
+            self.selected_cell.user_value = 0
+            self.selected_cell.sketch = 0
+            self.selected_cell.draw()
+            print(f'Cell at ({self.selected_cell.row}, {self.selected_cell.col}) has been cleared.')
 
     # Clears the value cell. Note that the user can only remove the cell values and sketched value that are
     # filled by themselves.
@@ -126,17 +133,20 @@ class Board:
                 self.selected_cell.sketch = value
                 print(f"Sketched {value} on cell at ({self.selected_cell.row}, {self.selected_cell.col}).") # DEBUG
                 self.selected_cell.draw()
-                self.selected_cell.deselect()
-                self.selected_cell = None
-                self.draw()
 
     # Sets the sketched value of the current selected cell equal to user entered value.
     # It will be displayed in the top left corner of the cell using the draw() function.
 
-    def place_number(self, value):
-        pass
+    def place_number(self):
+        if self.selected_cell is not None and self.selected_cell.sketch != 0:
+            self.selected_cell.user_value = self.selected_cell.sketch
+            self.selected_cell.sketch = 0
+            self.selected_cell.draw()
+            self.selected_cell.deselect()
+            self.selected_cell = None
+            self.draw()
 
-    # Sets the value of the current selected cell equal to user entered value.
+    # Sets the value of the current selected cell equal to user sketched value.
     # Called when the user presses the Enter key.
 
 
@@ -145,14 +155,28 @@ class Board:
     #     pass
 
     # Reset all cells in the board to their original values (0 if cleared, otherwise the corresponding digit).
+    # Also reset function seems to work just fine.
 
     def is_full(self):
-        pass
+        updated_board = self.update_board()
+        for row in updated_board:
+            if 0 in row:
+                return False
+        print('Full')
+        return True
 
     # Returns a Boolean value indicating whether the board is full or not.
 
     def update_board(self):
-        pass
+        updated_board = [[0 for _ in range(9)] for _ in range(9)]
+        for row_idx, row in enumerate(self.cells):
+            for col_idx, cell in enumerate(row):
+                if cell.user_value != 0:
+                    updated_board[row_idx][col_idx] = cell.user_value
+                else:
+                    updated_board[row_idx][col_idx] = cell.value
+        return updated_board
+
 
     # Updates the underlying 2D board with the values in all cells.
 
@@ -161,8 +185,21 @@ class Board:
 
     # Finds an empty cell and returns its row and col as a tuple (x, y).
 
+    def is_board_equal_to_master(self):
+        updated_board = self.update_board()
+        for row_idx, row in enumerate(updated_board):
+            for col_idx, value in enumerate(row):
+                if value != self.master_board[row_idx][col_idx]:
+                    return False
+        print('Yes')
+        return True
+
     def check_board(self):
-        pass
+        if self.is_full() and self.is_board_equal_to_master():
+            print('You did it')
+            return True
+        print('No')
+        return False
     # Check whether the Sudoku board is solved correctly
 
     def print_board(self):
