@@ -135,6 +135,7 @@ class Board:
     def place_number(self):
         if self.selected_cell is not None and self.selected_cell.sketch != 0:
             self.selected_cell.user_value = self.selected_cell.sketch
+            print(f'Placed {self.selected_cell.user_value} on cell at ({self.selected_cell.row}, {self.selected_cell.col})') # DEBIG
             self.selected_cell.sketch = 0
             self.selected_cell.draw()
             self.selected_cell.deselect()
