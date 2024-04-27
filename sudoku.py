@@ -212,7 +212,38 @@ def game_start(difficulty):
                 if event.key == pygame.K_BACKSPACE:
                     board.clear()
                     board.update_board()
-
+                if event.key == pygame.K_LEFT:
+                    if board.selected_cell:
+                        current_col = board.selected_cell.col
+                        if current_col <= len(board.cells[0]) - 1:
+                            board.b_select(board.selected_cell.row, current_col - 1)
+                    else:
+                        board.b_select(0,0)
+                if event.key == pygame.K_RIGHT:
+                    if board.selected_cell:
+                        current_col = board.selected_cell.col
+                        if current_col < len(board.cells[0]) and current_col != len(board.cells[0]) - 1:
+                            board.b_select(board.selected_cell.row, current_col + 1)
+                        else:
+                            board.b_select(board.selected_cell.row, 0)
+                    else:
+                        board.b_select(0,0)
+                if event.key == pygame.K_DOWN:
+                    if board.selected_cell:
+                        current_row = board.selected_cell.row
+                        if current_row < len(board.cells[0]) and current_row != len(board.cells[0]) - 1:
+                            board.b_select(current_row + 1, board.selected_cell.col)
+                        else:
+                            board.b_select(0, board.selected_cell.col)
+                    else:
+                        board.b_select(0,0)
+                if event.key == pygame.K_UP:
+                    if board.selected_cell:
+                        current_row = board.selected_cell.row
+                        if current_row <= len(board.cells[0]) - 1:
+                            board.b_select(current_row - 1, board.selected_cell.col)
+                    else:
+                        board.b_select(0,0)
         pygame.display.update()
 
 
@@ -259,6 +290,7 @@ if __name__ == "__main__":
         elif game_condition == "win":
             draw_game_win()
         elif game_condition == "reset":
+
             # RESETS THE BOARD TO BEFORE USER'S ADDED GUESSES
             pass
         elif game_condition == "restart":

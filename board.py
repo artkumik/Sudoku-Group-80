@@ -76,26 +76,18 @@ class Board:
         row = mouse_pos[1] // 100
         if row >= len(self.cells) or col >= len(self.cells[0]):
             return None
-        return col, row
+        return row, col
     # Returns position of cell
 
 
-    def b_select(self, col, row):
-        current_cell = self.cells[row][col]
-        if current_cell.value == 0 or current_cell.user_value != 0:
-            if self.selected_cell != current_cell:
-                self.draw()
-                if self.selected_cell:
-                    self.selected_cell.deselect()
-                    self.selected_cell.draw()
-                    self.draw()
-                current_cell.c_select()
-                self.selected_cell = current_cell
-
-            if self.selected_cell is not None:
-                self.selected_cell.draw()
-            else:
-                self.draw()
+    def b_select(self, row, col):
+        if self.selected_cell:
+            self.selected_cell.deselect()
+            self.selected_cell.draw()
+        self.selected_cell = self.cells[row][col]
+        self.selected_cell.c_select()
+        self.draw()
+        self.selected_cell.draw()
     # Marks the cell at (row, col) in the board as the current selected cell.
     # Once a cell has been selected, the user can edit its value or sketched value.
 
