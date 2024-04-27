@@ -5,11 +5,12 @@ class SudokuGenerator:
     def __init__(self, row_length=9, removed_cells=30):
         self.row_length = row_length
         self.removed_cells = removed_cells
-        self.board = self.get_board()
+        self.board = [[0 for _ in range(self.row_length)] for _ in range(self.row_length)]
         self.box_length	= int(math.sqrt(self.row_length))
 
+    
     def get_board(self):
-        return [[0 for _ in range(self.row_length)] for _ in range(self.row_length)]
+        return self.board
     
     def print_board(self):
         for row in self.board:
@@ -83,21 +84,37 @@ class SudokuGenerator:
     def fill_values(self):
         self.fill_diagonal()
         self.fill_remaining(0, self.box_length)
-        return self.board # <--- Added Return
+        #return self.board # <--- Added Return (removed because they wanted no return from this for some reason)
 
     def remove_cells(self):
         #removed cells is the amount of cells to removed? can be changed by setup
-        size = self.row_length * self.row_length
-        remove = random.sample(range(size), self.removed_cells)
-        for i in remove:
-            remove_row = i // 9
-            remove_col = i % 9
-            self.board[remove_row][remove_col] = 0
+        to_remove = self.removed_cells
+        removed = 0
+        while removed < to_remove:
+            x = random.randint(0,8)
+            y = random.randint(0,8)
+
+            if self.board[y][x] == 0:
+                continue
+            else:
+                self.board[y][x] = 0
+                removed += 1
+
 
     def get_generated_board(self):  # Added to directly feed generated_board into board class without alterations.
         return self.board
 
-b1 = SudokuGenerator(9,30)
+#b1 = SudokuGenerator(9,30)
+
+def generate_sudoku(size, removed):
+    sudoku = SudokuGenerator(size, removed)
+    sudoku.fill_values()
+    board = sudoku.get_board()
+    sudoku.remove_cells()
+    board = sudoku.get_board()
+    return board
+
+
 
 
 # b1.fill_values()
